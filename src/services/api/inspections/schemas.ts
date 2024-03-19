@@ -55,4 +55,5 @@ export const InspectionResponse = BaseResponseSchema.extend({
 export type CarrierDataType = z.infer<typeof CarrierDataSchema>;
 export type InspectionsType = z.infer<typeof InspectionSchema>;
 export type VehicleType = z.infer<typeof VehicleSchema>;
+export type ViolationType = z.infer<typeof ViolationSchema>;
 
