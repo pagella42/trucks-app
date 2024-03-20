@@ -1,4 +1,3 @@
-// Enum or object for column labels
 export const ColumnLabels = {
   DATE: "Date",
   STATE: "State",
@@ -9,7 +8,6 @@ export const ColumnLabels = {
   DETAILS: "Details",
 };
 
-// Table columns using the labels from ColumnLabels
 export const tableColumns = [
   {
     label: ColumnLabels.DATE,
