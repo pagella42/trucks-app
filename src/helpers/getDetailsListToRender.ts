@@ -5,7 +5,7 @@ type ListToRenderConfig<T> = {
   source: T;
 };
 
-export function createDetailsListToRender(
+export function getDetailsListToRender(
   configs: Array<ListToRenderConfig<any>>
 ): { label: string; value: string | number | undefined }[] {
   return configs.flatMap(({ items, source }) =>

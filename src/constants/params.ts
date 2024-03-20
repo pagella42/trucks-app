@@ -1,0 +1,1 @@
+export const DETAILS_PARAM = 'details';

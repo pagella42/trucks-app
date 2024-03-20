@@ -1,6 +1,7 @@
 import { tableColumns } from "@/constants/tableColumns";
+import { getDetailsUrl } from "@/helpers/getDetailsUrl";
 import { InspectionsType } from "@/services/api/inspections/schemas";
-import { getNestedValue } from "@/utils/getNestedValue";
+import { getNestedValue } from "@/helpers/getNestedValue";
 import Link from "next/link";
 
 type TableItemProps = {
@@ -8,15 +9,7 @@ type TableItemProps = {
 };
 
 export default function TableItem({ inspection }: TableItemProps) {
-  const createQueryString = () => {
-    const params = new URLSearchParams();
-    params.set("details", JSON.stringify(inspection));
-
-    return params.toString();
-  };
-  const expandUrl = `/${encodeURIComponent(
-    inspection.report_number
-  )}?${createQueryString()}`;
+  const expandUrl = getDetailsUrl(inspection);
 
   return (
     <tr>

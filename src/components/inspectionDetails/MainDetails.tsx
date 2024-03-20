@@ -8,13 +8,13 @@ import { useSearchParams } from "next/navigation";
 import { DetailItem } from "./DetailItem";
 import { getDetailsFromParams } from "@/utils/getDetailsFromParams";
 import { getFullState } from "@/utils/getFullState";
-import { createDetailsListToRender } from "@/app/helpers/createDetailsListToRender";
+import { getDetailsListToRender } from "@/helpers/getDetailsListToRender";
 
 export default function MainDetails() {
   const inspection = getDetailsFromParams(useSearchParams());
   if (!inspection) return null;
 
-  const renderList = createDetailsListToRender([
+  const renderList = getDetailsListToRender([
     { items: inspectionDataItems, source: inspection },
     { items: violationDataItems, source: inspection.violations[0] },
   ]);
@@ -31,11 +31,6 @@ export default function MainDetails() {
       </div>
       <div className="border-t border-gray-100">
         <dl className="divide-y divide-gray-100">
-          <DetailItem
-            title={"State"}
-            value={getFullState(inspection.report_state, true)}
-          />
-
           {renderList.map((c) =>
             c?.value ? (
               <DetailItem key={c.value} title={c.label} value={c.value} />

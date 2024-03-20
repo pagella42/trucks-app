@@ -4,6 +4,7 @@ import {
 } from "@/services/api/inspections/schemas";
 
 export const inspectionDataItems: (keyof InspectionsType)[] = [
+  "report_state",
   "inspection_date",
   "level",
 ];

@@ -3,7 +3,6 @@ import apiClient from "@/services/api/zodios";
 import { queryKeys } from "../queryKeys";
 
 export function useVehicleInfo(vin: string) {
-  console.log(vin);
   const queryVehicleInfo = useQuery({
     queryKey: [queryKeys.vehicleInfo, vin],
     queryFn: async () => {
@@ -19,6 +18,5 @@ export function useVehicleInfo(vin: string) {
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });
-
   return queryVehicleInfo;
 }
