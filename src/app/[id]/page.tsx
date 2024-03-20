@@ -4,17 +4,12 @@ import BreadCrumbs from "@/components/inspectionDetails/BreadCrumbs";
 import DetailsHeader from "@/components/inspectionDetails/DetailsHeader";
 import MainDetails from "@/components/inspectionDetails/MainDetails";
 import VehicleCard from "@/components/inspectionDetails/VehicleCard";
-import { InspectionsType } from "@/services/api/inspections/schemas";
+import { getDetailsFromParams } from "@/utils/getDetailsFromParams";
 import { useSearchParams } from "next/navigation";
 
 export default function Page({ params }: { params: { id: string } }) {
   const { id } = params;
-
-  const searchParams = useSearchParams();
-  const unparsedDetails = searchParams.get("details");
-  const inspection = unparsedDetails
-    ? (JSON.parse(unparsedDetails) as InspectionsType)
-    : null;
+  const inspection = getDetailsFromParams(useSearchParams());
   const vehicles = inspection?.vehicles;
 
   return (

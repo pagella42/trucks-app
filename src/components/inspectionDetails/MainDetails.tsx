@@ -1,58 +1,23 @@
 "use client";
 
-import { usStates } from "@/constants/usStates";
 import {
-  InspectionsType,
-  ViolationType,
-} from "@/services/api/inspections/schemas";
+  inspectionDataItems,
+  violationDataItems,
+} from "@/constants/detailsDataPoints";
 import { useSearchParams } from "next/navigation";
-
-const inspectionDataItems: {
-  label: string;
-  key: keyof InspectionsType;
-}[] = [
-  {
-    label: "Inspection date",
-    key: "inspection_date",
-  },
-  {
-    label: "Level",
-    key: "level",
-  },
-];
-const violationDataItems: {
-  label: string;
-  key: keyof ViolationType;
-}[] = [
-  {
-    label: "BASIC Violation",
-    key: "BASIC",
-  },
-  {
-    label: "Violation Code",
-    key: "code",
-  },
-  {
-    label: "Violation Description",
-    key: "description",
-  },
-  {
-    label: "Time Severity Weight",
-    key: "time_severity_weight",
-  },
-];
+import { DetailItem } from "./DetailItem";
+import { getDetailsFromParams } from "@/utils/getDetailsFromParams";
+import { getFullState } from "@/utils/getFullState";
+import { createDetailsListToRender } from "@/app/helpers/createDetailsListToRender";
 
 export default function MainDetails() {
-  const searchParams = useSearchParams();
-  const unparsedDetails = searchParams.get("details");
-  const inspection = unparsedDetails
-    ? (JSON.parse(unparsedDetails) as InspectionsType)
-    : null;
-
+  const inspection = getDetailsFromParams(useSearchParams());
   if (!inspection) return null;
 
-  const stateDisplay =
-    usStates[inspection.report_state] + ` (${inspection.report_state})`;
+  const renderList = createDetailsListToRender([
+    { items: inspectionDataItems, source: inspection },
+    { items: violationDataItems, source: inspection.violations[0] },
+  ]);
 
   return (
     <div className="-mx-4 px-4 py-8 shadow-sm ring-1 ring-gray-900/5 sm:mx-0 sm:rounded-lg sm:px-8 sm:pb-14 lg:col-span-2 lg:row-span-2 lg:row-end-2 xl:px-16 xl:pb-20 xl:pt-16">
@@ -66,24 +31,14 @@ export default function MainDetails() {
       </div>
       <div className="border-t border-gray-100">
         <dl className="divide-y divide-gray-100">
-          <DetailItem title={"State"} value={stateDisplay} />
-          {inspectionDataItems.map((item) =>
-            inspection[item.key] ? (
-              <DetailItem
-                key={item.key}
-                title={item.label}
-                value={inspection[item.key]}
-              />
-            ) : null
-          )}
+          <DetailItem
+            title={"State"}
+            value={getFullState(inspection.report_state, true)}
+          />
 
-          {violationDataItems.map((item) =>
-            inspection.violations[0][item.key] ? (
-              <DetailItem
-                key={item.key}
-                title={item.label}
-                value={inspection.violations[0][item.key]}
-              />
+          {renderList.map((c) =>
+            c?.value ? (
+              <DetailItem key={c.value} title={c.label} value={c.value} />
             ) : null
           )}
         </dl>
@@ -91,15 +46,3 @@ export default function MainDetails() {
     </div>
   );
 }
-
-const DetailItem = ({ title, value }: { title: string; value: any }) => {
-  if (typeof value !== "string" || typeof value !== "number") return null;
-  return (
-    <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-      <dt className="text-sm font-medium text-gray-900">{title}</dt>
-      <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-        {value}
-      </dd>
-    </div>
-  );
-};
