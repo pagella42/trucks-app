@@ -4,7 +4,7 @@ export const ColumnLabels = {
   STATE: "State",
   INSPECTION_NUMBER: "Insp. Number",
   TRACTOR_PLATE: "Tractor Plate",
-  BASIC: "BASIC (Vio. #1)",
+  BASIC: "BASIC",
   WEIGHT: "Weight",
   DETAILS: "Details",
 };
