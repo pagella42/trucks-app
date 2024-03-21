@@ -1,9 +1,10 @@
 import { VehicleType } from "@/services/api/inspections/schemas";
+import { ExtraInfoType } from "@/services/api/vehicleInfo/schemas";
 
 export const itemsToRender: (keyof VehicleType)[] = [
     "vehicle_id_number",
     "license_number",
     "license_state",
   ];
-  export const collapsibleSections = ["vehicle", "plant"] as const;
-  export type CollapsibleSectionKey = (typeof collapsibleSections)[number];
+
+  export type CollapsibleSectionKey = keyof ExtraInfoType;

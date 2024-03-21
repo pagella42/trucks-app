@@ -7,18 +7,27 @@ import {
 import { useSearchParams } from "next/navigation";
 import { DetailItem } from "./DetailItem";
 import { getDetailsFromParams } from "@/utils/getDetailsFromParams";
-import { getDetailsListToRender } from "@/helpers/getDetailsListToRender";
+import {
+  RenderableListItemType,
+  getRenderableListFromObject,
+} from "@/utils/getRenderableListFromObject";
+import {
+  InspectionsType,
+  ViolationType,
+} from "@/services/api/inspections/schemas";
+import { getDesiredMainDetails } from "@/helpers/getDesiredMainDetails";
 
 export default function MainDetails() {
   const inspection = getDetailsFromParams(useSearchParams());
   if (!inspection) return null;
 
-  const renderList = [
-    ...getDetailsListToRender({ items: inspectionDataItems, source: inspection }),
-    ...getDetailsListToRender({
-      items: violationDataItems,
-      source: inspection.violations[0],
-    }),
+  
+  const list1 = getRenderableListFromObject(inspection);
+  const list2 = getRenderableListFromObject(inspection.violations[0]);
+
+  const desiredDataPoints = [
+    ...getDesiredMainDetails<InspectionsType>(list1, inspectionDataItems),
+    ...getDesiredMainDetails<ViolationType>(list2, violationDataItems),
   ];
 
   return (
@@ -33,7 +42,7 @@ export default function MainDetails() {
       </div>
       <div className="border-t border-gray-100">
         <dl className="divide-y divide-gray-100">
-          {renderList.map((c) =>
+          {desiredDataPoints.map((c) =>
             c?.value ? (
               <DetailItem key={c.value} title={c.label} value={c.value} />
             ) : null

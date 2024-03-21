@@ -1,4 +1,5 @@
-export function getNestedValue<T, K extends keyof T>(
+
+export function getNestedValue<T>(
   obj: T,
   path: string
 ): any {

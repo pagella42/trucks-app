@@ -1,22 +1,17 @@
 import React, { SVGProps } from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/20/solid";
-import {
-  ExtraPlantInfoType,
-  ExtraVehicleInfoType,
-} from "@/services/api/vehicleInfo/schemas";
 import { VehicleCollapsibleItem } from "./VehicleCollapsibleItem";
 import { camelCaseToRegularText } from "@/utils/camelCaseToRegularText";
-import { CollapsibleSectionKey } from "@/constants/vehicleCardDataPoints";
+import { getRenderableListFromObject } from "@/utils/getRenderableListFromObject";
 
-export type CollapsibleSectionDataItem =
-  | ExtraVehicleInfoType
-  | ExtraPlantInfoType;
-
-type CollapsibleSectionProps = {
+type ObjectToReceive = {
+  [key: string]: string | null;
+};
+type CollapsibleSectionProps<T> = {
   open: boolean;
-  setOpen: (open: CollapsibleSectionKey) => void;
-  data: CollapsibleSectionDataItem;
-  name: CollapsibleSectionKey;
+  setOpen: () => void;
+  data: T;
+  name: keyof T;
 };
 
 export default function VehicleCollapsibleSection({
@@ -24,14 +19,15 @@ export default function VehicleCollapsibleSection({
   setOpen,
   data,
   name,
-}: CollapsibleSectionProps) {
-  const valuesToRender = Object.keys(data) as (keyof ExtraVehicleInfoType)[];
-  const sectionName = camelCaseToRegularText(name);
+}: CollapsibleSectionProps<ObjectToReceive>) {
+  const valuesToRender = getRenderableListFromObject(data);
+
+  const sectionName = camelCaseToRegularText(name.toString());
   return (
     <>
       <div className="border-t border-gray-900/5 px-6 py-6 w-full">
         <button
-          onClick={() => setOpen(name)}
+          onClick={setOpen}
           className="text-sm font-semibold leading-6 text-blue-500 flex"
         >
           {open ? "Hide " : "Show "}
@@ -41,15 +37,16 @@ export default function VehicleCollapsibleSection({
       </div>
       {open && data && valuesToRender ? (
         <div className="border-t border-gray-900/5 py-6 w-full">
-          {valuesToRender.map((v) => (
-            <VehicleCollapsibleItem name={v} data={data} key={v} />
-          ))}
+          {valuesToRender.map(({ label, value }) => {
+            return (
+              <VehicleCollapsibleItem label={label} value={value} key={label} />
+            );
+          })}
         </div>
       ) : null}
     </>
   );
 }
-
 
 type IconProps = SVGProps<SVGSVGElement> & {
   open: boolean;

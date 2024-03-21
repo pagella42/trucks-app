@@ -1,6 +1,7 @@
 import { DETAILS_PARAM } from "@/constants/params";
 import { InspectionsType } from "@/services/api/inspections/schemas";
 
+//function to get the url for a specific inspection
 export const getDetailsUrl = (
   inspection: InspectionsType,
 ) => {

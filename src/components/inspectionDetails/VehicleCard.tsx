@@ -7,9 +7,9 @@ import VehicleCollapsibleSection from "./VehicleCollapsibleSection";
 import VehicleCardItem from "./VehicleCardItem";
 import {
   itemsToRender,
-  collapsibleSections,
   CollapsibleSectionKey,
 } from "@/constants/vehicleCardDataPoints";
+import { ExtraInfoType } from "@/services/api/vehicleInfo/schemas";
 
 type VehicleProps = {
   isFirst?: boolean;
@@ -28,6 +28,9 @@ export default function VehicleCard({ isFirst, vehicle }: VehicleProps) {
       [section]: !prevState[section],
     }));
   };
+  const collapsibleSections = Object.keys(
+    data ?? {}
+  ) as (keyof ExtraInfoType)[];
   return (
     <div className={clsx("lg:col-start-3", isFirst ? "lg:row-end-1" : "")}>
       <div className="rounded-lg bg-gray-50 shadow-sm ring-1 ring-gray-900/5">
@@ -44,17 +47,15 @@ export default function VehicleCard({ isFirst, vehicle }: VehicleProps) {
             ))}
           </div>
           {!isLoading && data
-            ? collapsibleSections.map((section) =>
-                data[section] ? (
-                  <VehicleCollapsibleSection
-                    key={section}
-                    open={!!showSections[section]}
-                    setOpen={sectionStatusChange}
-                    data={data[section]}
-                    name={section}
-                  />
-                ) : null
-              )
+            ? collapsibleSections.map((section: keyof ExtraInfoType) => (
+                <VehicleCollapsibleSection
+                  key={section}
+                  open={!!showSections[section]}
+                  setOpen={() => sectionStatusChange(section)}
+                  data={data[section]}
+                  name={section}
+                />
+              ))
             : null}
         </dl>
       </div>
